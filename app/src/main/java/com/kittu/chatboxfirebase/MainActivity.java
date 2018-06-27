@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -40,6 +41,7 @@ import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity {
+    private DatabaseReference mUserDatabase;
     @BindView(R.id.etEmail)
     EditText etEmail;
     @BindView(R.id.etPassword)
@@ -68,7 +70,8 @@ Button btnRegister;
         setContentView(R.layout.activity_main);
 
        ButterKnife.bind(this);
-        mGoogleBtn=(SignInButton)findViewById(R.id.GoogleSignIn);
+       mUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
+        mGoogleBtn=findViewById(R.id.GoogleSignIn);
         mAuth = FirebaseAuth.getInstance();
         progressdialog = new ProgressDialog(this);
 //GoogleSignIn
@@ -130,6 +133,7 @@ Button btnRegister;
                             FirebaseUser user = mAuth.getCurrentUser();
                            String uid=user.getUid();
                            String name=user.getDisplayName();
+                           String device_token=FirebaseInstanceId.getInstance().getToken();
                             DatabaseReference myRef = FirebaseDatabase.getInstance()
                                     .getReference().
                                             child("Users").child(uid);
@@ -138,6 +142,7 @@ Button btnRegister;
                             usermap.put("status","Hey There!");
                             usermap.put("image","default");
                             usermap.put("thumb_image","default");
+                            usermap.put("device_token",device_token);
                             myRef.setValue(usermap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -187,12 +192,29 @@ Button btnRegister;
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            String deviceToken= FirebaseInstanceId.getInstance().getToken();
+                            final FirebaseUser user = mAuth.getCurrentUser();
+
                             if (user.isEmailVerified()) {
-progressdialog.cancel();
-                                updateUI(user);
+                                progressdialog.cancel();
+                                mUserDatabase.child(user.getUid()).child("device_token").setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful())
+                                        {
+                                            updateUI(user);
+
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(MainActivity.this, "SOme Error", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
                             } else {
                                 progressdialog.cancel();
                                 Toast.makeText(MainActivity.this, "Please Verify your email", Toast.LENGTH_SHORT).show();
@@ -215,10 +237,6 @@ progressdialog.cancel();
         if (user != null &&user.isEmailVerified()) {
             finish();
             startActivity(new Intent(getApplicationContext(), ChatActivity.class));
-        } else {
-            //finish();
-            //  startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
         }
     }
 

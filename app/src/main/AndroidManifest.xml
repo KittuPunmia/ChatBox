@@ -15,6 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppLogTheme">
+        <service
+            android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +45,13 @@
         <activity
             android:name=".UsersActivity"
             android:parentActivityName=".ChatActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity">
+           <intent-filter>
+               <action android:name="com.kittu.chatboxfirebase.TARGET_NOTIFICATION" />
+               <category android:name="android.intent.category.DEFAULT" />
+           </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
