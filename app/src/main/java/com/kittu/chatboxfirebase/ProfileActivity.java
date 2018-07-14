@@ -302,11 +302,11 @@ send_request.setOnClickListener(new View.OnClickListener() {
         }
         if(mCurrentState.equals("friends"))
         {
-            FriendsDatabase.child(user.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            FriendsDatabase.child(user.getUid()).child(user_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()) {
-                        FriendsDatabase.child(user_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        FriendsDatabase.child(user_key).child(user.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 send_request.setEnabled(true);

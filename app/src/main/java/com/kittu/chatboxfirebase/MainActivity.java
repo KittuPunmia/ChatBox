@@ -249,8 +249,17 @@ Button btnRegister;
     public void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        updateUI(user);
 
+        if(user!=null) {
+            updateUI(user);
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        super.onStop();
 
     }
 

@@ -68,6 +68,7 @@ public class UsersActivity extends AppCompatActivity {
         recycler_view.setAdapter(userAdapter);
 
         mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        mdatabaseReference.keepSynced(true);
 
         Log.i("Values", "befiore recycle");
        /* mdatabaseReference.addValueEventListener(new ValueEventListener() {

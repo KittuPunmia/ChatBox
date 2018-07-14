@@ -170,6 +170,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
     }

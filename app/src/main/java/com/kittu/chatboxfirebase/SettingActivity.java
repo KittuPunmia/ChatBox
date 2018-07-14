@@ -176,9 +176,11 @@ private ProgressDialog progressDialog;
                     String CurrentUserId=mCurrentUser.getUid();
                     StorageReference filePath=mImagestorage.child("profile_images")
                             .child(CurrentUserId+".jpg");
+                    //thumb image compressor used
                     final StorageReference thumbfilepath=mImagestorage.child("profile_images").child("Thumb")
                             .child(mCurrentUser.getUid()+".jpg");
                     final byte[] finalThumb_byte = thumb_byte;
+
                     filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -236,6 +238,26 @@ private ProgressDialog progressDialog;
                 }
             }
         }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+       /* if(mCurrentUser!=null)
+        {
+            mdatabaseReference.child("online").setValue("true");
+        }
+        */
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+       /* if(mCurrentUser!=null) {
+            mdatabaseReference.child("online").setValue("false");
+        }*/
+
+    }
+
     public static String random() {
 
         Random generator = new Random();

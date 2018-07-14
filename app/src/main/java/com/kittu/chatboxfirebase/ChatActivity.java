@@ -9,10 +9,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 public class ChatActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar toolbar;
 ViewPager viewPager;
+DatabaseReference mUserDatabase;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 private SectionsPagerAdapter msectionspageradapter;
 private TabLayout tablayout;
     @Override
@@ -22,6 +29,7 @@ private TabLayout tablayout;
         toolbar=findViewById(R.id.toolbarid);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("CHAT BOX");
+        mUserDatabase= FirebaseDatabase.getInstance().getReference().child("Users");
 
         viewPager=findViewById(R.id.tabpager);
         msectionspageradapter=new SectionsPagerAdapter(getSupportFragmentManager());
@@ -63,5 +71,30 @@ private TabLayout tablayout;
         }
 
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user!=null)
+        {
+            mUserDatabase.child(user.getUid()).child("online").setValue("true");
+        }
+        else
+        {
+            Intent i=new Intent(ChatActivity.this,MainActivity.class);
+            startActivity(i);
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(user!=null) {
+            mUserDatabase.child(user.getUid()).child("online").setValue(ServerValue.TIMESTAMP);
+        }
     }
 }

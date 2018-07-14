@@ -15,27 +15,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppLogTheme">
-        <service
-            android:name=".FirebaseMessagingService">
+        <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+             </activity>
         <activity
             android:name=".RegisterActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".ChatActivity" />
+        <activity android:name=".ChatActivity">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
         <activity
             android:name=".SettingActivity"
-            android:parentActivityName=".ChatActivity" />
+            android:parentActivityName=".ChatActivity" >
+
+        </activity>
         <activity
             android:name=".StatusActivity"
             android:parentActivityName=".SettingActivity" />
@@ -46,12 +49,13 @@
             android:name=".UsersActivity"
             android:parentActivityName=".ChatActivity" />
         <activity android:name=".ProfileActivity">
-           <intent-filter>
-               <action android:name="com.kittu.chatboxfirebase.TARGET_NOTIFICATION" />
-               <category android:name="android.intent.category.DEFAULT" />
-           </intent-filter>
+            <intent-filter>
+                <action android:name="com.kittu.chatboxfirebase.TARGET_NOTIFICATION" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+        <activity android:name=".MessageActivity" android:parentActivityName=".ChatActivity"></activity>
     </application>
 
 </manifest>
